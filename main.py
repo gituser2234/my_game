@@ -27,9 +27,14 @@ class Game:
     def load_data(self):
         # Game folder path
         game_folder = path.dirname(__file__)
+        img_folder = path.join(game_folder, 'img')
         
+        # Load map data
         self.map_data = []
         self.map = Map(path.join(game_folder, 'map4.txt'))
+        
+        # Load player data
+        self.player_img = pygame.image.load(path.join(img_folder, sett.PLAYER_IMG)).convert_alpha()
         
     def new(self):
         # Initialize all variables and do all the setup for a new game

@@ -14,8 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.groups = game.all_sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.Surface([sett.TILESIZE, sett.TILESIZE])
-        self.image.fill(sett.YELLOW)
+        self.image = game.player_img
         self.rect = self.image.get_rect()
         
         # Vectors
