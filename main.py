@@ -6,7 +6,7 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Wall
+from sprites import Player, Wall, Mob
 from tilemap import Map, Camera
 from os import path
 
@@ -29,15 +29,20 @@ class Game:
         
         # Load map data
         self.map_data = []
-        self.map = Map(path.join(game_folder, 'map4.txt'))
+        self.map = Map(path.join(game_folder, 'map3.txt'))
         
-        # Load player data
+        # Load img data
+        # Scale due to huge dimensions
         self.player_img = pygame.image.load(path.join(img_folder, sett.PLAYER_IMG)).convert_alpha()
+        self.player_img = pygame.transform.scale(self.player_img, (sett.TILESIZE, sett.TILESIZE))
+        self.mob_img = pygame.image.load(path.join(img_folder, sett.MOB_IMG)).convert_alpha()
+        self.mob_img = pygame.transform.scale(self.mob_img, (sett.TILESIZE, sett.TILESIZE))
         
     def new(self):
         # Initialize all variables and do all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
+        self.mobs = pygame.sprite.Group()
        
         # Spawning walls
         # enumerate makes row as index, example:
@@ -51,6 +56,8 @@ class Game:
                 elif tile == 'P':
                     # Spawn player
                     self.player = Player(self, col, row)
+                elif tile == 'M':
+                    Mob(self, col, row)
         
         self.camera = Camera(self.map.width, self.map.height)
         
@@ -77,13 +84,21 @@ class Game:
             pygame.draw.line(self.screen, sett.LIGHTGREY, (0, y), (sett.WIDTH, y))
     
     def draw(self):
+        # Display FPS
+        pygame.display.set_caption("{:.0f}".format(self.clock.get_fps()))
+        
+        # Draw things
         self.screen.fill(sett.BGCOLOR)
-        self.draw_grid()
+        #self.draw_grid()
+        
+        # Draw every sprite
         for sprite in self.all_sprites:
             # self.camera.apply(sprite) returns sprite rectangle shifted by 
             # camera topleft (which is shifted by player's position)
             # So the line blits sprite.image in shifted rectangle
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+            
+        # Finish drawing
         pygame.display.flip()
         
     def events(self):
