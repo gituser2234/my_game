@@ -8,6 +8,7 @@ Created on Sat Jan 14 21:26:31 2017
 import pygame
 import sys
 import settings as sett
+import sprites as spr
 from os import path
 
 class Game:
@@ -30,6 +31,7 @@ class Game:
         # Initialize all variables and do all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
+        self.player = spr.Player(self, 1, 1)
     
     def run(self):
         # Game loop - set self.playing = False to end the game
@@ -40,17 +42,14 @@ class Game:
             self.events()
             self.update()
             self.draw()
-            
-    def quit(self):
-        pygame.quit()
-        sys.exit()
         
     def update(self):
         # Update portion of game loop
-        pass
+        self.all_sprites.update()
     
     def draw(self):
         self.screen.fill(sett.BGCOLOR)
+        self.all_sprites.draw(self.screen)
         pygame.display.flip()
         
     def events(self):
@@ -59,11 +58,17 @@ class Game:
             if event.type == pygame.QUIT:
                 self.quit()
                 
+                
+                
     def show_start_screen(self):
         pass
     
     def show_game_over_screen(self):
         pass
+    
+    def quit(self):
+        pygame.quit()
+        sys.exit()
     
     
 # Create the game object
