@@ -71,6 +71,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.y
         self.collide_with_walls('y')
         
+        
 class Wall(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         # Member of all sprites and walls groups
