@@ -76,6 +76,7 @@ class Mob(pygame.sprite.Sprite):
         # Member of all sprites and mob groups
         self.groups = game.all_sprites, game.mobs
         pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
         self.image = game.mob_img
         self.rect = self.image.get_rect()
         self.pos = vec(x, y) * sett.TILESIZE
