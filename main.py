@@ -29,7 +29,7 @@ class Game:
         game_folder = path.dirname(__file__)
         
         self.map_data = []
-        self.map = Map(path.join(game_folder, 'map2.txt'))
+        self.map = Map(path.join(game_folder, 'map4.txt'))
         
     def new(self):
         # Initialize all variables and do all the setup for a new game
