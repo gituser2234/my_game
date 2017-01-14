@@ -32,3 +32,9 @@ PLAYER_IMG = 'manBlue_gun.png'
 # MOB SETTINGS
 MOB_IMG = 'zoimbie1_hold.png'
 MOB_SPEED = 150
+
+# LAYERS
+WALL_LAYER = 1
+PLAYER_LAYER = 2
+MOB_LAYER = 2
+EFFECTS_LAYER = 4

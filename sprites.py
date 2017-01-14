@@ -41,6 +41,7 @@ def collide_with_walls(sprite, group, direction):
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = sett.PLAYER_LAYER
         self.groups = game.all_sprites
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -81,6 +82,7 @@ class Mob(pygame.sprite.Sprite):
     # MOB NEEDS TO BE CAREFULLY COMPLETED FROM SCRATCH
     def __init__(self, game, x, y):
         # Member of all sprites and mob groups
+        self._layer = sett.MOB_LAYER
         self.groups = game.all_sprites, game.mobs
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
