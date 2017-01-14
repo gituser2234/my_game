@@ -46,6 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.image = game.player_img
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         
         # Vectors
         self.vel = vec(0, 0)
