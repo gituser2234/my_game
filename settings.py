@@ -38,3 +38,7 @@ WALL_LAYER = 1
 PLAYER_LAYER = 2
 MOB_LAYER = 2
 EFFECTS_LAYER = 4
+ITEMS_LAYER = 1
+
+# ITEMS
+ITEM_IMAGES = {'health': 'health_pack.png'}

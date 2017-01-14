@@ -9,6 +9,7 @@ import pygame
 import settings as sett
 vec = pygame.math.Vector2
 
+
 def collide_with_walls(sprite, group, direction):
     if direction == 'x':
         hits = pygame.sprite.spritecollide(sprite, group, False)
@@ -107,3 +108,15 @@ class Obstacle(pygame.sprite.Sprite):
         self.y = y
         self.rect.x = x
         self.rect.y = y
+        
+        
+class Item(pygame.sprite.Sprite):
+    def __init__(self, game, pos, item_type):
+        self._layer = sett.ITEMS_LAYER
+        self.groups = game.all_sprites, game.items
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = game.item_images[item_type]
+        self.rect = self.image.get_rect()
+        self.item_type = item_type
+        self.rect.center = pos

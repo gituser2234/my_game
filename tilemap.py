@@ -37,6 +37,7 @@ class TiledMap:
         self.render(temp_surface)
         return temp_surface
     
+        
 class Camera:
     def __init__(self, width, height):
         # As we can see camera is just a Rectangle

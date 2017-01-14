@@ -6,9 +6,10 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Obstacle, Mob
+from sprites import Player, Obstacle, Mob, Item
 from tilemap import Camera, TiledMap
 from os import path
+vec = pygame.math.Vector2
 
 class Game:
     def __init__(self):
@@ -41,20 +42,29 @@ class Game:
         self.mob_img = pygame.image.load(path.join(img_folder, sett.MOB_IMG)).convert_alpha()
         self.mob_img = pygame.transform.scale(self.mob_img, (sett.TILESIZE, sett.TILESIZE))
         
+        self.item_images = {}
+        for item in sett.ITEM_IMAGES:
+            self.item_images[item] = pygame.image.load(path.join(img_folder, sett.ITEM_IMAGES[item])).convert_alpha()
+            
     def new(self):
         # Initialize all variables and do all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
+        self.items = pygame.sprite.Group()
        
         # Placing objects from map
         for tile_object in self.map.tmxdata.objects:
+            # To spawn our object in the center of the object in map, not in left upper corner
+            obj_center = vec(tile_object.x + tile_object.width // 2, tile_object.y + tile_object.height // 2)
             if tile_object.name == 'player':
-                self.player = Player(self, tile_object.x, tile_object.y)
+                self.player = Player(self, obj_center.x, obj_center.y)
             elif tile_object.name == 'zombie':
-                Mob(self, tile_object.x, tile_object.y)
+                Mob(self, obj_center.x, obj_center.y)
             elif tile_object.name == 'wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+            elif tile_object.name in ['health']:
+                Item(self, obj_center, tile_object.name)
         
         self.camera = Camera(self.map.width, self.map.height)
         
@@ -73,6 +83,12 @@ class Game:
         # Update portion of game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        
+        # Player hits items
+        hits = pygame.sprite.spritecollide(self.player, self.items, False)
+        for hit in hits:
+            if hit.item_type == 'health':
+                hit.kill()
         
     def draw_grid(self):
         for x in range(0, sett.WIDTH, sett.TILESIZE):
@@ -106,8 +122,7 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
-                
-                
+            
                 
     def show_start_screen(self):
         pass
