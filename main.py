@@ -6,7 +6,7 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player
+from sprites import Player, Obstacle, Mob
 from tilemap import Camera, TiledMap
 from os import path
 
@@ -47,7 +47,14 @@ class Game:
         self.walls = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
        
-        self.player = Player(self, 5, 5)
+        # Placing objects from map
+        for tile_object in self.map.tmxdata.objects:
+            if tile_object.name == 'player':
+                self.player = Player(self, tile_object.x, tile_object.y)
+            elif tile_object.name == 'zombie':
+                Mob(self, tile_object.x, tile_object.y)
+            elif tile_object.name == 'wall':
+                Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
         
         self.camera = Camera(self.map.width, self.map.height)
         

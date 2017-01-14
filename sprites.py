@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
         
         # Vectors
         self.vel = vec(0, 0)
-        self.pos = vec(x, y) * sett.TILESIZE
+        self.pos = vec(x, y)
         
     def get_keys(self):
         self.vel = vec(0, 0)
@@ -86,22 +86,20 @@ class Mob(pygame.sprite.Sprite):
         self.image = game.mob_img
         self.rect = self.image.get_rect()
         # self.hit_rect = MOB_HIT_RECT.copy() IN ORIGINAL
-        self.pos = vec(x, y) * sett.TILESIZE
+        self.pos = vec(x, y)
         self.vel = vec(0, 0)
         self.rect.center = self.pos
-        
     #def update(self)
 
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
-        # Member of all sprites and walls groups
-        self.groups = game.all_sprites, game.walls
+    
+class Obstacle(pygame.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        # Member of all sprites groups and walls groups (???)
+        self.groups = game.walls
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pygame.Surface([sett.TILESIZE, sett.TILESIZE])
-        self.image.fill(sett.GREEN)
-        self.rect = self.image.get_rect()
+        self.rect = pygame.Rect(x, y, w, h)
         self.x = x
         self.y = y
-        self.rect.x = x * sett.TILESIZE
-        self.rect.y = y * sett.TILESIZE
+        self.rect.x = x
+        self.rect.y = y
