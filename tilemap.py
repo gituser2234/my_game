@@ -6,21 +6,36 @@ Created on Sat Jan 14 21:58:44 2017
 """
 
 import pygame
+import pytmx
 import settings as sett
 
-class Map:
+      
+class TiledMap:
     def __init__(self, filename):
-        self.data = []
-        with open(filename, 'rt') as f:
-            for line in f:
-                # strip() deletes newline characters
-                self.data.append(line.strip())
-                
-        # How many tiles wide/high is map
-        self.titlewidth = len(self.data[0])
-        self.titleheight = len(self.data)
-        self.width = self.titlewidth * sett.TILESIZE
-        self.height = self.titleheight * sett.TILESIZE
+        # pixelalpha=True to make sure the transparency go on
+        tm = pytmx.load_pygame(filename, pixelalpha=True)
+        
+        # Width in tiles
+        self.width = tm.width * tm.tilewidth
+        self.height = tm.height * tm.tileheight
+        
+        # We will store all data in this variable
+        self.tmxdata = tm
+        
+    def render(self, surface):
+        # ti will be alias to this command
+        ti = self.tmxdata.get_tile_image_by_gid
+        for layer in self.tmxdata.visible_layers:
+            if isinstance(layer, pytmx.TiledTileLayer):
+                for x, y, gid, in layer:
+                    tile = ti(gid)
+                    if tile:
+                        surface.blit(tile, (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight))
+                        
+    def make_map(self):
+        temp_surface = pygame.Surface([self.width, self.height])
+        self.render(temp_surface)
+        return temp_surface
     
 class Camera:
     def __init__(self, width, height):
@@ -29,9 +44,14 @@ class Camera:
         self.width = width
         self.height = height
         
+    # Apply offset to the entity
     def apply(self, entity):
         # move() gives new rectangle shifted by amount of an argument
         return entity.rect.move(self.camera.topleft)
+        
+    # Apply offset to the rectangle
+    def apply_rect(self, rect):
+        return rect.move(self.camera.topleft)
         
     def update(self, target):
         # We wanted centered on the screen

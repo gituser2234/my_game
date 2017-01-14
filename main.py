@@ -6,8 +6,8 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Wall, Mob
-from tilemap import Map, Camera
+from sprites import Player
+from tilemap import Camera, TiledMap
 from os import path
 
 class Game:
@@ -26,10 +26,13 @@ class Game:
         # Game folder path
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
+        map_folder = path.join(game_folder, 'maps')
         
         # Load map data
         self.map_data = []
-        self.map = Map(path.join(game_folder, 'map3.txt'))
+        self.map = TiledMap(path.join(map_folder, 'level1.tmx'))
+        self.map_img = self.map.make_map()
+        self.map_rect = self.map_img.get_rect()
         
         # Load img data
         # Scale due to huge dimensions
@@ -44,20 +47,7 @@ class Game:
         self.walls = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
        
-        # Spawning walls
-        # enumerate makes row as index, example:
-        # l = ['a', 'b', 'c', 'd']
-        # for index, item in enumerate(l):
-        #   print(index, item)
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == '1':
-                    Wall(self, col, row)
-                elif tile == 'P':
-                    # Spawn player
-                    self.player = Player(self, col, row)
-                elif tile == 'M':
-                    Mob(self, col, row)
+        self.player = Player(self, 5, 5)
         
         self.camera = Camera(self.map.width, self.map.height)
         
@@ -88,7 +78,10 @@ class Game:
         pygame.display.set_caption("{:.0f}".format(self.clock.get_fps()))
         
         # Draw things
-        self.screen.fill(sett.BGCOLOR)
+        
+        self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+        
+        #self.screen.fill(sett.BGCOLOR)
         #self.draw_grid()
         
         # Draw every sprite
