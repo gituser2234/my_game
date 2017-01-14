@@ -86,6 +86,7 @@ class Mob(pygame.sprite.Sprite):
         self.game = game
         self.image = game.mob_img
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         # self.hit_rect = MOB_HIT_RECT.copy() IN ORIGINAL
         self.pos = vec(x, y)
         self.vel = vec(0, 0)
