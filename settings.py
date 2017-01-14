@@ -31,3 +31,4 @@ PLAYER_IMG = 'manBlue_gun.png'
 
 # MOB SETTINGS
 MOB_IMG = 'zoimbie1_hold.png'
+MOB_SPEED = 150
