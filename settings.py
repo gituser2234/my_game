@@ -42,3 +42,5 @@ ITEMS_LAYER = 1
 
 # ITEMS
 ITEM_IMAGES = {'health': 'health_pack.png'}
+BOB_RANGE = 15
+BOB_SPEED = 0.38

@@ -7,6 +7,7 @@ Created on Sat Jan 14 21:33:56 2017
 
 import pygame
 import settings as sett
+import pytweening as tween
 vec = pygame.math.Vector2
 
 
@@ -120,3 +121,21 @@ class Item(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.item_type = item_type
         self.rect.center = pos
+        self.pos = pos
+        
+        # Choose tween function
+        self.tween = tween.easeInOutSine
+        
+        # Store where we are, range: [0, 1]
+        self.step = 0
+        self.direction = 1
+        
+    def update(self):
+        # Bobbing motion
+        # - 0.5 because we start from the center
+        offset = sett.BOB_RANGE * (self.tween(self.step / sett.BOB_RANGE) - 0.5)
+        self.rect.centery = self.pos.y + offset * self.direction
+        self.step += sett.BOB_SPEED
+        if self.step > sett.BOB_RANGE:
+            self.step = 0
+            self.direction *= -1
