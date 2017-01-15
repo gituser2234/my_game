@@ -6,7 +6,7 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Obstacle, Mob, Item
+from sprites import Player, Obstacle, Mob, Item, Finish
 from tilemap import Camera, TiledMap
 from os import path
 vec = pygame.math.Vector2
@@ -39,8 +39,6 @@ class Game:
         # Scale due to huge dimensions
         self.player_img = pygame.image.load(path.join(img_folder, sett.PLAYER_IMG)).convert_alpha()
         self.player_img = pygame.transform.scale(self.player_img, (sett.TILESIZE, sett.TILESIZE))
-        self.mob_img = pygame.image.load(path.join(img_folder, sett.MOB_IMG)).convert_alpha()
-        self.mob_img = pygame.transform.scale(self.mob_img, (sett.TILESIZE, sett.TILESIZE))
         
         self.background_img = pygame.image.load(path.join(img_folder, sett.BG_IMAGE)).convert()
         self.background_rect = self.background_img.get_rect()
@@ -69,6 +67,9 @@ class Game:
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             elif tile_object.name in ['coin_gold']:
                 Item(self, obj_center, tile_object.name)
+            elif tile_object.name == 'finish':
+                self.finish = Finish(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+                
         
         self.camera = Camera(self.map.width, self.map.height)
         
@@ -98,6 +99,11 @@ class Game:
         for hit in hits:
             if hit.item_type == 'coin_gold':
                 hit.kill()
+                
+        # Player hits finish
+        hits = pygame.sprite.collide_rect(self.player, self.finish)
+        if hits:
+            self.next_level()
         
     def draw_grid(self):
         for x in range(0, sett.WIDTH, sett.TILESIZE):
@@ -134,7 +140,9 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
-            
+                
+    def next_level(self):
+        pass            
                 
     def show_start_screen(self):
         pass

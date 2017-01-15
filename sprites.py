@@ -165,3 +165,14 @@ class Item(pygame.sprite.Sprite):
         if self.step > sett.BOB_RANGE:
             self.step = 0
             self.direction *= -1
+            
+            
+class Finish(pygame.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        pygame.sprite.Sprite.__init__(self)
+        self.game = game
+        self.rect = pygame.Rect(x, y, w, h)
+        self.x = x
+        self.y = y
+        self.rect.x = x
+        self.rect.y = y

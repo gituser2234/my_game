@@ -49,3 +49,6 @@ ITEM_IMAGES = {'health': 'health_pack.png',
                'coin_gold': 'coinGold.png'}
 BOB_RANGE = 15
 BOB_SPEED = 0.38
+
+# MAPS
+MAP_LIST = ['map1.tmx', 'map2.tmx']

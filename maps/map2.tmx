@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="20" tilewidth="32" tileheight="32" nextobjectid="38">
- <tileset firstgid="1" name="old" tilewidth="32" tileheight="32" tilecount="900" columns="30">
+ <tileset firstgid="1" name="hyptosis_tile-art-batch-1" tilewidth="32" tileheight="32" tilecount="900" columns="30">
   <image source="../img/hyptosis_tile-art-batch-1.png" trans="ffffff" width="960" height="960"/>
- </tileset>
- <tileset firstgid="901" name="hyptosis_tile-art-batch-1 (3)" tilewidth="32" tileheight="32" tilecount="900" columns="30">
-  <image source="../img/hyptosis_tile-art-batch-1.png" width="960" height="960"/>
  </tileset>
  <imagelayer name="Image">
   <image source="C:/Users/anonymous/Pictures/Wallpapers/OQLkoEn.jpg" width="1920" height="1080"/>
@@ -53,7 +50,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,1682,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,782,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
@@ -84,7 +81,6 @@
   <object id="32" name="wall" x="96" y="288" width="32" height="32"/>
   <object id="33" name="wall" x="288" y="224" width="32" height="32"/>
   <object id="34" name="coin_gold" x="448" y="64" width="32" height="32"/>
-  <object id="35" name="coin_gold" x="576" y="64" width="32" height="32"/>
   <object id="36" name="coin_gold" x="704" y="64" width="32" height="32"/>
   <object id="37" name="finish" x="328" y="584" width="16" height="16"/>
  </objectgroup>
