@@ -71,6 +71,11 @@ class Game:
         
         self.camera = Camera(self.map.width, self.map.height)
         
+        # Debug mode
+        self.draw_debug = False
+        if self.draw_debug:
+            self.font = pygame.font.SysFont('Calibri', 35, True, False)
+        
     
     def run(self):
         # Game loop - set self.playing = False to end the game
@@ -115,6 +120,10 @@ class Game:
             # camera topleft (which is shifted by player's position)
             # So the line blits sprite.image in shifted rectangle
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+            
+        if self.draw_debug:
+            text = self.font.render("accy="+str(self.player.acc.y)+"vecy="+str(self.player.vel.y), True, sett.BLACK)
+            self.screen.blit(text, [20, 20])
             
         # Finish drawing
         pygame.display.flip()
