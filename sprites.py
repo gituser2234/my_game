@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Jan 14 21:33:56 2017
-
-@author: anonymous
-"""
 
 import pygame
 import settings as sett

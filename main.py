@@ -23,8 +23,7 @@ class Game:
         self.clock = pygame.time.Clock()
         
         self.running = True
-        self.playing = True
-        
+        self.playing = True        
         self.total_points = 0
         
     def load_data(self):
@@ -81,7 +80,6 @@ class Game:
         # Initialize all variables and do all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
-        self.mobs = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
         self.lavas = pygame.sprite.Group()
         self.fallings = pygame.sprite.Group()
@@ -94,8 +92,6 @@ class Game:
             obj_center = vec(tile_object.x + tile_object.width // 2, tile_object.y + tile_object.height // 2)
             if tile_object.name == 'player':
                 self.player = Player(self, obj_center.x, obj_center.y)
-            elif tile_object.name == 'zombie':
-                Mob(self, obj_center.x, obj_center.y)
             elif tile_object.name == 'wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             elif tile_object.name in ['coin_gold']:
@@ -107,7 +103,7 @@ class Game:
             elif tile_object.name == 'weight':
                 falling = FallingItem(self, obj_center.x, obj_center.y, tile_object.name)
                 self.fallings_list.append(falling)
-        
+                
         self.camera = Camera(self.map.width, self.map.height)
         
     def run(self):
@@ -176,7 +172,7 @@ class Game:
     
     def draw(self):
         # Display FPS
-        pygame.display.set_caption("{:.0f}".format(self.clock.get_fps()))
+        #pygame.display.set_caption("{:.0f}".format(self.clock.get_fps()))
         
         # Draw things
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))

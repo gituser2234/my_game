@@ -1,3 +1,0 @@
-* add music
-* add sounds
-* add level changing
