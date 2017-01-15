@@ -60,8 +60,10 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.acc.x = -sett.PLAYER_ACC
+            self.image = pygame.transform.flip(self.image, True, False)
         if keys[pygame.K_RIGHT]:
             self.acc.x = sett.PLAYER_ACC
+            self.image = pygame.transform.flip(self.image, True, False)
         if keys[pygame.K_UP]:
             self.rect.y += 2
             hits = pygame.sprite.spritecollide(self, self.game.walls, False)
@@ -86,6 +88,10 @@ class Player(pygame.sprite.Sprite):
         self.pos += self.vel + 0.5 * self.acc
         
         self.rect.x = self.pos.x
+#        if self.acc.x > 0:
+#            self.image = pygame.transform.flip(self.image, True, False)
+#        elif self.acc.x < 0:
+#            self.image = pygame.transform.flip(self.image, True, False)
         collide_with_walls(self, self.game.walls, 'x')
         self.rect.y = self.pos.y
         collide_with_walls(self, self.game.walls, 'y')

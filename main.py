@@ -48,7 +48,7 @@ class Game:
         self.item_images = {}
         for item in sett.ITEM_IMAGES:
             self.item_images[item] = pygame.image.load(path.join(img_folder, sett.ITEM_IMAGES[item])).convert_alpha()
-            self.item_images[item] = pygame.transform.scale(self.item_images[item], (sett.TILESIZE, sett.TILESIZE))
+            self.item_images[item] = pygame.transform.scale(self.item_images[item], (sett.TILESIZE * 3 // 4, sett.TILESIZE * 3 // 4))
             
     def new(self):
         # Initialize all variables and do all the setup for a new game
@@ -73,7 +73,7 @@ class Game:
         self.camera = Camera(self.map.width, self.map.height)
         
         # Debug mode
-        self.draw_debug = False
+        self.draw_debug = True
         if self.draw_debug:
             self.font = pygame.font.SysFont('Calibri', 35, True, False)
         
@@ -96,7 +96,7 @@ class Game:
         # Player hits items
         hits = pygame.sprite.spritecollide(self.player, self.items, False)
         for hit in hits:
-            if hit.item_type == 'health':
+            if hit.item_type == 'coin_gold':
                 hit.kill()
         
     def draw_grid(self):
@@ -123,7 +123,7 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             
         if self.draw_debug:
-            text = self.font.render("accy="+str(self.player.acc.y)+"vecy="+str(self.player.vel.y), True, sett.BLACK)
+            text = self.font.render("acc="+str(self.player.acc)+"vel="+str(self.player.vel), True, sett.BLACK)
             self.screen.blit(text, [20, 20])
             
         # Finish drawing
