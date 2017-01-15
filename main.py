@@ -25,30 +25,37 @@ class Game:
         
     def load_data(self):
         # Game folder path
-        game_folder = path.dirname(__file__)
-        img_folder = path.join(game_folder, 'img')
-        map_folder = path.join(game_folder, 'maps')
-        
-        # Load map data
-        self.map_data = []
-        self.map = TiledMap(path.join(map_folder, 'map1.tmx'))
-        self.map_img = self.map.make_map()
-        self.map_rect = self.map_img.get_rect()
+        self.game_folder = path.dirname(__file__)
+        self.img_folder = path.join(self.game_folder, 'img')
+        self.map_folder = path.join(self.game_folder, 'maps')
         
         # Load img data
         # Scale due to huge dimensions
-        self.player_img = pygame.image.load(path.join(img_folder, sett.PLAYER_IMG)).convert_alpha()
+        self.player_img = pygame.image.load(path.join(self.img_folder, sett.PLAYER_IMG)).convert_alpha()
         self.player_img = pygame.transform.scale(self.player_img, (sett.TILESIZE, sett.TILESIZE))
         
-        self.background_img = pygame.image.load(path.join(img_folder, sett.BG_IMAGE)).convert()
+        self.background_img = pygame.image.load(path.join(self.img_folder, sett.BG_IMAGE)).convert()
         self.background_rect = self.background_img.get_rect()
         
+        # Load items
         self.item_images = {}
         for item in sett.ITEM_IMAGES:
-            self.item_images[item] = pygame.image.load(path.join(img_folder, sett.ITEM_IMAGES[item])).convert_alpha()
+            self.item_images[item] = pygame.image.load(path.join(self.img_folder, sett.ITEM_IMAGES[item])).convert_alpha()
             self.item_images[item] = pygame.transform.scale(self.item_images[item], (sett.TILESIZE * 3 // 4, sett.TILESIZE * 3 // 4))
+        
+        # Prepare map data
+        self.map_data = []
+        chosen_map = 'map1.tmx'
+        
+        # Load chosen map
+        self.load_map(chosen_map)
             
-    def new(self):
+            
+    def load_map(self, chosen_map):
+        self.map = TiledMap(path.join(self.map_folder, chosen_map))
+        self.map_img = self.map.make_map()
+        self.map_rect = self.map_img.get_rect()
+        
         # Initialize all variables and do all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
@@ -68,11 +75,12 @@ class Game:
             elif tile_object.name in ['coin_gold']:
                 Item(self, obj_center, tile_object.name)
             elif tile_object.name == 'finish':
-                self.finish = Finish(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-                
+                self.finish = Finish(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)  
         
         self.camera = Camera(self.map.width, self.map.height)
         
+        
+    def new(self):
         # Debug mode
         self.draw_debug = True
         if self.draw_debug:
@@ -103,7 +111,9 @@ class Game:
         # Player hits finish
         hits = pygame.sprite.collide_rect(self.player, self.finish)
         if hits:
-            self.next_level()
+            chosen_map = 'map2.tmx'
+            self.load_map(chosen_map)
+            
         
     def draw_grid(self):
         for x in range(0, sett.WIDTH, sett.TILESIZE):
