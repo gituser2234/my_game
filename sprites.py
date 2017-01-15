@@ -52,6 +52,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (x, y)
         
         # Vectors
+        self.acc = vec(0, 0)
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
         
@@ -62,17 +63,19 @@ class Player(pygame.sprite.Sprite):
             self.vel.x = -sett.PLAYER_SPEED
         if keys[pygame.K_RIGHT]:
             self.vel.x = sett.PLAYER_SPEED
-        if keys[pygame.K_UP]:
-            self.vel.y = -sett.PLAYER_SPEED
-        if keys[pygame.K_DOWN]:
-            self.vel.y = sett.PLAYER_SPEED
             
-        # if running diagonal to avoid speed-up
-        if self.vel.x != 0 and self.vel.y != 0:
-            self.vel *= 0.7071
+#        if keys[pygame.K_UP]:
+#            self.vel.y = -sett.PLAYER_SPEED
+#        if keys[pygame.K_DOWN]:
+#            self.vel.y = sett.PLAYER_SPEED         
+#        # if running diagonal to avoid speed-up
+#        if self.vel.x != 0 and self.vel.y != 0:
+#            self.vel *= 0.7071
         
     def update(self):
+        self.acc += vec(0, 10)
         self.get_keys()
+        self.vel += self.acc * self.game.dt
         self.pos += self.vel * self.game.dt
         self.rect.x = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
