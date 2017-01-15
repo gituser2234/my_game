@@ -71,6 +71,7 @@ class Player(pygame.sprite.Sprite):
             hits = pygame.sprite.spritecollide(self, self.game.walls, False)
             self.rect.y -= 2
             if hits:
+                self.game.sound_effects['jump'].play()
                 self.vel.y = -7.2
             
 #        if keys[pygame.K_UP]:
@@ -128,6 +129,18 @@ class Obstacle(pygame.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
         # Member of all sprites groups and walls groups (???)
         self.groups = game.walls
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.rect = pygame.Rect(x, y, w, h)
+        self.x = x
+        self.y = y
+        self.rect.x = x
+        self.rect.y = y
+        
+        
+class Lava(pygame.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self.groups = game.lavas
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.rect = pygame.Rect(x, y, w, h)

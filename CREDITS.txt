@@ -4,3 +4,9 @@ Basic Framework: Chris Bradfield, http://kidscancode.org/
 Character: CC0: Buch, http://blog-buch.rhcloud.com
 Map Tiles: CC-BY 3.0: Hyptosis and Zabin from OGA, http://opengameart.org/users/hyptosis, http://opengameart.org/users/zabin
 HUD: CC0: Kenney Vleugels, www.kenney.nl
+#MUSIC
+"River of Io" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 3.0 License
+http://creativecommons.org/licenses/by/3.0
+#SOUNDS:
+CC BY 3.0, https://www.freesound.org

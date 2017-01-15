@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-
-"""
 
 # COLORS
 WHITE = (255, 255, 255)
@@ -17,12 +14,16 @@ WIDTH = 800
 HEIGHT = 640
 FPS = 60
 TITLE = "TAKA GIERKA"
-BGCOLOR = DARKGREY
 BG_IMAGE = 'background.jpg'
-
 TILESIZE = 32
-GRIDWIDTH = WIDTH // TILESIZE
-GRIDHEIGHT = HEIGHT // TILESIZE
+
+# MUSIC
+BG_MUSIC = 'bg_music.mp3'
+
+# SOUNDS
+SOUND_EFFECTS = {'coin_gathered': 'coin_gathered.wav',
+                 'jump': 'jump.wav',
+                 'lvl_complete': 'lvl_complete.wav'}
 
 # HUD SETTINGS
 HUD_DIGITS = ['hud_0.png', 'hud_1.png', 'hud_2.png', 'hud_3.png', 'hud_4.png', 
@@ -37,13 +38,6 @@ PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.76
 PLAYER_IMG = 'player.png' 
 
-# LAYERS
-WALL_LAYER = 1
-PLAYER_LAYER = 2
-MOB_LAYER = 2
-EFFECTS_LAYER = 4
-ITEMS_LAYER = 1
-
 # ITEMS
 ITEM_IMAGES = {'coin_gold': 'coinGold.png'}
 BOB_RANGE = 15
@@ -51,3 +45,10 @@ BOB_SPEED = 0.38
 
 # MAPS
 MAP_LIST = ['map1.tmx', 'map2.tmx']
+
+# LAYERS
+WALL_LAYER = 1
+PLAYER_LAYER = 2
+MOB_LAYER = 2
+EFFECTS_LAYER = 4
+ITEMS_LAYER = 1

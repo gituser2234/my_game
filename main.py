@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-
-"""
 
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Obstacle, Mob, Item, Finish
+from sprites import Player, Obstacle, Mob, Item, Finish, Lava
 from tilemap import Camera, TiledMap
 from os import path
 vec = pygame.math.Vector2
@@ -24,10 +21,12 @@ class Game:
         self.load_data()
         
     def load_data(self):
-        # Game folder path
+        # Folders' paths
         self.game_folder = path.dirname(__file__)
         self.img_folder = path.join(self.game_folder, 'img')
         self.map_folder = path.join(self.game_folder, 'maps')
+        self.music_folder = path.join(self.game_folder, 'music')
+        self.sound_folder = path.join(self.game_folder, 'sound')
         
         # Load img data
         # Scale due to huge dimensions
@@ -56,22 +55,31 @@ class Game:
         
         # Prepare map data
         self.map_data = []
-        chosen_map = 'map1.tmx'
+        self.chosen_map = 'map2.tmx'
+        
+        # Load music
+        pygame.mixer.music.load(path.join(self.music_folder, sett.BG_MUSIC))
+        pygame.mixer.music.play(loops=-1)
+        
+        # Load sounds
+        self.sound_effects = {}
+        for sound_type in sett.SOUND_EFFECTS:
+            self.sound_effects[sound_type] = pygame.mixer.Sound(path.join(self.sound_folder, sett.SOUND_EFFECTS[sound_type]))
         
         # Load chosen map
-        self.load_map(chosen_map)
+        self.load_map(self.chosen_map)
             
             
     def load_map(self, chosen_map):
         self.map = TiledMap(path.join(self.map_folder, chosen_map))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
-        
         # Initialize all variables and do all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
+        self.lavas = pygame.sprite.Group()
         self.points = 0
        
         # Placing objects from map
@@ -88,6 +96,8 @@ class Game:
                 Item(self, obj_center, tile_object.name)
             elif tile_object.name == 'finish':
                 self.finish = Finish(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)  
+            elif tile_object.name == 'lava':
+                Lava(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
         
         self.camera = Camera(self.map.width, self.map.height)
         
@@ -118,15 +128,22 @@ class Game:
         hits = pygame.sprite.spritecollide(self.player, self.items, False)
         for hit in hits:
             if hit.item_type == 'coin_gold':
+                self.sound_effects['coin_gathered'].play()
                 self.points += 1
                 hit.kill()
+                
+        # Player hits lava
+        hits = pygame.sprite.spritecollide(self.player, self.lavas, False)
+        if hits:
+            self.load_map(self.chosen_map)
                 
         # Player hits finish
         hits = pygame.sprite.collide_rect(self.player, self.finish)
         if hits:
+            self.sound_effects['lvl_complete'].play()
             chosen_map = 'map2.tmx'
             self.load_map(chosen_map)
-            
+                        
     
     def draw_hud(self):
         # DRAMATIC CODE, NEEDS TO BE IMPROVED
