@@ -48,28 +48,30 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.player_img
+        self.image_right = self.image.copy()
+        self.image_left = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.look_dir = "right"
         
         # Vectors
-        self.acc = vec(0, 0)
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
         
     def get_keys(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            self.acc.x = -sett.PLAYER_ACC
-            self.image = pygame.transform.flip(self.image, True, False)
+            self.vel.x = -sett.PLAYER_SPEED
+            self.look_dir = "left"
         if keys[pygame.K_RIGHT]:
-            self.acc.x = sett.PLAYER_ACC
-            self.image = pygame.transform.flip(self.image, True, False)
+            self.vel.x = sett.PLAYER_SPEED
+            self.look_dir = "right"
         if keys[pygame.K_UP]:
             self.rect.y += 2
             hits = pygame.sprite.spritecollide(self, self.game.walls, False)
             self.rect.y -= 2
             if hits:
-                self.vel.y = -11.2
+                self.vel.y = -7.2
             
 #        if keys[pygame.K_UP]:
 #            self.vel.y = -sett.PLAYER_SPEED
@@ -80,21 +82,29 @@ class Player(pygame.sprite.Sprite):
 #            self.vel *= 0.7071
 
     def update(self):
-        self.acc = vec(0, sett.PLAYER_GRAV)
+        self.calc_grav()
         self.get_keys()
-        
-        self.acc.x += self.vel.x * sett.PLAYER_FRICTION        
-        self.vel += self.acc
-        self.pos += self.vel + 0.5 * self.acc
+    
+        self.pos += self.vel
         
         self.rect.x = self.pos.x
-#        if self.acc.x > 0:
-#            self.image = pygame.transform.flip(self.image, True, False)
-#        elif self.acc.x < 0:
-#            self.image = pygame.transform.flip(self.image, True, False)
         collide_with_walls(self, self.game.walls, 'x')
         self.rect.y = self.pos.y
         collide_with_walls(self, self.game.walls, 'y')
+        
+        if self.look_dir == "left":
+            self.image = self.image_left
+        elif self.look_dir == "right":
+            self.image = self.image_right
+            
+        
+        self.vel.x = 0
+        
+    def calc_grav(self):
+        if self.vel.y == 0:
+            self.vel.y = 1
+        else:
+            self.vel.y += .35
         
         
 class Mob(pygame.sprite.Sprite):

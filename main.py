@@ -123,7 +123,7 @@ class Game:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
             
         if self.draw_debug:
-            text = self.font.render("acc="+str(self.player.acc)+"vel="+str(self.player.vel), True, sett.BLACK)
+            text = self.font.render("vel="+str(self.player.vel), True, sett.BLACK)
             self.screen.blit(text, [20, 20])
             
         # Finish drawing
