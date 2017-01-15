@@ -23,8 +23,14 @@ class TiledMap:
         self.tmxdata = tm
         
     def render(self, surface):
-        # ti will be alias to this command
+        # ti will be alias to this command  
         ti = self.tmxdata.get_tile_image_by_gid
+        
+        my_gid = self.tmxdata.get_layer_by_name("Image").gid
+        my_tile = ti(my_gid)
+        surface.blit(my_tile, (0, 0))
+        
+        
         for layer in self.tmxdata.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, gid, in layer:

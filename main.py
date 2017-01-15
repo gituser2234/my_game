@@ -31,7 +31,7 @@ class Game:
         
         # Load map data
         self.map_data = []
-        self.map = TiledMap(path.join(map_folder, 'level1.tmx'))
+        self.map = TiledMap(path.join(map_folder, 'map1.tmx'))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
         
@@ -41,6 +41,9 @@ class Game:
         self.player_img = pygame.transform.scale(self.player_img, (sett.TILESIZE, sett.TILESIZE))
         self.mob_img = pygame.image.load(path.join(img_folder, sett.MOB_IMG)).convert_alpha()
         self.mob_img = pygame.transform.scale(self.mob_img, (sett.TILESIZE, sett.TILESIZE))
+        
+        self.background_img = pygame.image.load(path.join(img_folder, sett.BG_IMAGE)).convert()
+        self.background_rect = self.background_img.get_rect()
         
         self.item_images = {}
         for item in sett.ITEM_IMAGES:
@@ -101,7 +104,6 @@ class Game:
         pygame.display.set_caption("{:.0f}".format(self.clock.get_fps()))
         
         # Draw things
-        
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
         
         #self.screen.fill(sett.BGCOLOR)
