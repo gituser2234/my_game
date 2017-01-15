@@ -39,12 +39,13 @@ PLAYER_GRAV = 0.76
 PLAYER_IMG = 'player.png' 
 
 # ITEMS
-ITEM_IMAGES = {'coin_gold': 'coinGold.png'}
+ITEM_IMAGES = {'coin_gold': 'coinGold.png',
+               'weight': 'weightChained.png'}
 BOB_RANGE = 15
 BOB_SPEED = 0.38
 
 # MAPS
-MAP_LIST = ['map1.tmx', 'map2.tmx']
+MAP_LIST = ['map1.tmx', 'map2.tmx', 'map3.tmx']
 
 # LAYERS
 WALL_LAYER = 1

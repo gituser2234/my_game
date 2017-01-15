@@ -3,10 +3,13 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Obstacle, Mob, Item, Finish, Lava
+from sprites import Player, Obstacle, Mob, Item, Finish, Lava, FallingItem
 from tilemap import Camera, TiledMap
 from os import path
 vec = pygame.math.Vector2
+
+# TODO:
+# MERGE LAVAS AND FALLING ITEMS INTO ONE GAME OVER GROUP
 
 class Game:
     def __init__(self):
@@ -55,7 +58,8 @@ class Game:
         
         # Prepare map data
         self.map_data = []
-        self.chosen_map = 'map2.tmx'
+        self.map_nr = 0
+        self.chosen_map = sett.MAP_LIST[self.map_nr]
         
         # Load music
         pygame.mixer.music.load(path.join(self.music_folder, sett.BG_MUSIC))
@@ -69,7 +73,6 @@ class Game:
         # Load chosen map
         self.load_map(self.chosen_map)
             
-            
     def load_map(self, chosen_map):
         self.map = TiledMap(path.join(self.map_folder, chosen_map))
         self.map_img = self.map.make_map()
@@ -80,6 +83,8 @@ class Game:
         self.mobs = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
         self.lavas = pygame.sprite.Group()
+        self.fallings = pygame.sprite.Group()
+        self.fallings_list = []
         self.points = 0
        
         # Placing objects from map
@@ -98,9 +103,11 @@ class Game:
                 self.finish = Finish(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)  
             elif tile_object.name == 'lava':
                 Lava(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+            elif tile_object.name == 'weight':
+                falling = FallingItem(self, obj_center.x, obj_center.y, tile_object.name)
+                self.fallings_list.append(falling)
         
         self.camera = Camera(self.map.width, self.map.height)
-        
         
     def new(self):
         # Debug mode
@@ -108,7 +115,6 @@ class Game:
         if self.draw_debug:
             self.font = pygame.font.SysFont('Calibri', 35, True, False)
         
-    
     def run(self):
         # Game loop - set self.playing = False to end the game
         self.playing = True
@@ -123,6 +129,15 @@ class Game:
         # Update portion of game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        
+        # Player activates weight
+        for falling_item in self.fallings_list:
+            if self.player.rect.top > falling_item.rect.bottom:
+                if self.player.rect.right >= falling_item.rect.left and\
+                   self.player.rect.right <= falling_item.rect.right or\
+                   self.player.rect.left >= falling_item.rect.left and\
+                   self.player.rect.left <= falling_item.rect.right:
+                    falling_item.fall = True
         
         # Player hits items
         hits = pygame.sprite.spritecollide(self.player, self.items, False)
@@ -141,8 +156,13 @@ class Game:
         hits = pygame.sprite.collide_rect(self.player, self.finish)
         if hits:
             self.sound_effects['lvl_complete'].play()
-            chosen_map = 'map2.tmx'
-            self.load_map(chosen_map)
+            self.map_nr += 1
+            
+            if self.map_nr >= len(sett.MAP_LIST):
+                self.show_game_over_screen()
+            else:
+                chosen_map = sett.MAP_LIST[self.map_nr]
+                self.load_map(chosen_map)
                         
     
     def draw_hud(self):
@@ -164,14 +184,12 @@ class Game:
         # Draw things
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
     
-        
         # Draw every sprite
         for sprite in self.all_sprites:
             # self.camera.apply(sprite) returns sprite rectangle shifted by 
             # camera topleft (which is shifted by player's position)
             # So the line blits sprite.image in shifted rectangle
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-
         
         self.draw_hud()
             
@@ -187,9 +205,6 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
-                
-    def next_level(self):
-        pass            
                 
     def show_start_screen(self):
         pass

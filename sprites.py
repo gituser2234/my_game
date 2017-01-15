@@ -74,13 +74,6 @@ class Player(pygame.sprite.Sprite):
                 self.game.sound_effects['jump'].play()
                 self.vel.y = -7.2
             
-#        if keys[pygame.K_UP]:
-#            self.vel.y = -sett.PLAYER_SPEED
-#        if keys[pygame.K_DOWN]:
-#            self.vel.y = sett.PLAYER_SPEED         
-#        # if running diagonal to avoid speed-up
-#        if self.vel.x != 0 and self.vel.y != 0:
-#            self.vel *= 0.7071
 
     def update(self):
         self.calc_grav()
@@ -189,3 +182,32 @@ class Finish(pygame.sprite.Sprite):
         self.y = y
         self.rect.x = x
         self.rect.y = y
+        
+        
+class FallingItem(pygame.sprite.Sprite):
+    def __init__(self, game, x, y, item_type):
+        self._layer = sett.EFFECTS_LAYER
+        self.groups = game.all_sprites, game.fallings, game.lavas
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = self.game.item_images[item_type]
+        tmp_image = self.image.copy()
+        tmp_image = pygame.transform.rotozoom(tmp_image, 0, 0.62)
+        self.rect = tmp_image.get_rect()
+        self.item_type = item_type
+        self.rect.centerx = x
+        self.rect.bottom = y
+        
+        self.vel = vec(0, 0)
+        self.pos = vec(x, y)
+        
+        self.fall = False
+        
+    def update(self):
+        if self.fall:
+            self.vel.y += .35
+            self.pos += self.vel
+            self.rect.center = self.pos
+            if self.rect.centery > sett.HEIGHT + 50:
+                self.kill()
+            
