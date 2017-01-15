@@ -97,7 +97,6 @@ class Player(pygame.sprite.Sprite):
         elif self.look_dir == "right":
             self.image = self.image_right
             
-        
         self.vel.x = 0
         
     def calc_grav(self):
