@@ -3,13 +3,14 @@
 import pygame
 import sys
 import settings as sett
-from sprites import Player, Obstacle, Mob, Item, Finish, Lava, FallingItem
+from sprites import Player, Obstacle, Item, Finish, Lava, FallingItem
 from tilemap import Camera, TiledMap
 from os import path
 vec = pygame.math.Vector2
 
 # TODO:
 # MERGE LAVAS AND FALLING ITEMS INTO ONE GAME OVER GROUP
+# IMPROVE DRAW CODE
 
 class Game:
     def __init__(self):
@@ -21,7 +22,10 @@ class Game:
         pygame.display.set_caption(sett.TITLE)
         self.clock = pygame.time.Clock()
         
-        self.load_data()
+        self.running = True
+        self.playing = True
+        
+        self.total_points = 0
         
     def load_data(self):
         # Folders' paths
@@ -69,11 +73,8 @@ class Game:
         self.sound_effects = {}
         for sound_type in sett.SOUND_EFFECTS:
             self.sound_effects[sound_type] = pygame.mixer.Sound(path.join(self.sound_folder, sett.SOUND_EFFECTS[sound_type]))
-        
-        # Load chosen map
-        self.load_map(self.chosen_map)
             
-    def load_map(self, chosen_map):
+    def load_map(self, chosen_map):        
         self.map = TiledMap(path.join(self.map_folder, chosen_map))
         self.map_img = self.map.make_map()
         self.map_rect = self.map_img.get_rect()
@@ -109,15 +110,8 @@ class Game:
         
         self.camera = Camera(self.map.width, self.map.height)
         
-    def new(self):
-        # Debug mode
-        self.draw_debug = False
-        if self.draw_debug:
-            self.font = pygame.font.SysFont('Calibri', 35, True, False)
-        
     def run(self):
         # Game loop - set self.playing = False to end the game
-        self.playing = True
         while self.playing:
             # Delta time
             self.dt = self.clock.tick(sett.FPS) / 1000
@@ -137,7 +131,7 @@ class Game:
                    self.player.rect.right <= falling_item.rect.right or\
                    self.player.rect.left >= falling_item.rect.left and\
                    self.player.rect.left <= falling_item.rect.right:
-                    falling_item.fall = True
+                   falling_item.fall = True
         
         # Player hits items
         hits = pygame.sprite.spritecollide(self.player, self.items, False)
@@ -156,13 +150,16 @@ class Game:
         hits = pygame.sprite.collide_rect(self.player, self.finish)
         if hits:
             self.sound_effects['lvl_complete'].play()
+            self.total_points += self.points
             self.map_nr += 1
             
             if self.map_nr >= len(sett.MAP_LIST):
-                self.show_game_over_screen()
+                self.playing = False
+                self.map_nr = 0
+                self.chosen_map = sett.MAP_LIST[self.map_nr]
             else:
-                chosen_map = sett.MAP_LIST[self.map_nr]
-                self.load_map(chosen_map)
+                self.chosen_map = sett.MAP_LIST[self.map_nr]
+                self.load_map(self.chosen_map)
                         
     
     def draw_hud(self):
@@ -193,10 +190,6 @@ class Game:
         
         self.draw_hud()
             
-        if self.draw_debug:
-            text = self.font.render("vel="+str(self.player.vel), True, sett.BLACK)
-            self.screen.blit(text, [20, 20])
-            
         # Finish drawing
         pygame.display.flip()
         
@@ -205,22 +198,54 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
-                
-    def show_start_screen(self):
-        pass
     
     def show_game_over_screen(self):
-        pass
+        self.dim_screen = pygame.Surface(self.screen.get_size()).convert_alpha()
+        self.dim_screen.fill((0, 0, 0, 180))
+        self.screen.blit(self.dim_screen, [0, 0])
+        
+        # RENDER TEXT HERE
+        self.draw_text(self.screen, "GAME COMPLETED!", 35, sett.WIDTH // 2, sett.HEIGHT // 2 - 100)
+        self.draw_text(self.screen, "POINTS COLLECTED: "+str(self.total_points), 35, sett.WIDTH // 2, sett.HEIGHT // 2)
+        self.draw_text(self.screen, "Press Space to restart. Press ESC to quit", 35, sett.WIDTH // 2, sett.HEIGHT * 6 // 9)
+        
+        pygame.display.flip()
+        self.wait_for_key()
+        
+    def wait_for_key(self):
+        pygame.event.wait()
+        waiting = True
+        while waiting:
+            self.clock.tick(sett.FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    waiting = False
+                    self.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE: 
+                        waiting = False
+                        self.playing = True
+                        self.total_points = 0
+                    if event.key == pygame.K_ESCAPE:
+                        waiting = False
+                        self.quit()
+                    
+    def draw_text(self, surf, text, size, x, y):
+        font = pygame.font.SysFont('Calibri', 35, True, False)
+        text_surface = font.render(text, True, sett.WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        surf.blit(text_surface, text_rect)
     
     def quit(self):
         pygame.quit()
         sys.exit()
     
     
-# Create the game object
+# Create the game
 game = Game()
-game.show_start_screen()
-while True:
-    game.new()
+game.load_data()
+while game.running:
+    game.load_map(game.chosen_map)
     game.run()
     game.show_game_over_screen()

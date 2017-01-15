@@ -74,13 +74,10 @@ class Player(pygame.sprite.Sprite):
                 self.game.sound_effects['jump'].play()
                 self.vel.y = -7.2
             
-
     def update(self):
         self.calc_grav()
         self.get_keys()
-    
         self.pos += self.vel
-        
         self.rect.x = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.rect.y = self.pos.y
@@ -98,25 +95,7 @@ class Player(pygame.sprite.Sprite):
             self.vel.y = 1
         else:
             self.vel.y += .35
-        
-        
-class Mob(pygame.sprite.Sprite):
-    # MOB NEEDS TO BE CAREFULLY COMPLETED FROM SCRATCH
-    def __init__(self, game, x, y):
-        # Member of all sprites and mob groups
-        self._layer = sett.MOB_LAYER
-        self.groups = game.all_sprites, game.mobs
-        pygame.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        self.image = game.mob_img
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-        # self.hit_rect = MOB_HIT_RECT.copy() IN ORIGINAL
-        self.pos = vec(x, y)
-        self.vel = vec(0, 0)
-        self.rect.center = self.pos
-    #def update(self)
-
+            
     
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
@@ -195,7 +174,7 @@ class FallingItem(pygame.sprite.Sprite):
         tmp_image = pygame.transform.rotozoom(tmp_image, 0, 0.62)
         self.rect = tmp_image.get_rect()
         self.item_type = item_type
-        self.rect.centerx = x
+        self.rect.right = x
         self.rect.bottom = y
         
         self.vel = vec(0, 0)
@@ -207,7 +186,24 @@ class FallingItem(pygame.sprite.Sprite):
         if self.fall:
             self.vel.y += .35
             self.pos += self.vel
-            self.rect.center = self.pos
+            self.rect.topright = self.pos
             if self.rect.centery > sett.HEIGHT + 50:
                 self.kill()
             
+           
+#class Mob(pygame.sprite.Sprite):
+#    # MOB NEEDS TO BE CAREFULLY COMPLETED FROM SCRATCH
+#    def __init__(self, game, x, y):
+#        # Member of all sprites and mob groups
+#        self._layer = sett.MOB_LAYER
+#        self.groups = game.all_sprites, game.mobs
+#        pygame.sprite.Sprite.__init__(self, self.groups)
+#        self.game = game
+#        self.image = game.mob_img
+#        self.rect = self.image.get_rect()
+#        self.rect.center = (x, y)
+#        # self.hit_rect = MOB_HIT_RECT.copy() IN ORIGINAL
+#        self.pos = vec(x, y)
+#        self.vel = vec(0, 0)
+#        self.rect.center = self.pos
+#    #def update(self)
