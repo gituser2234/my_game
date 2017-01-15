@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jan 14 21:21:55 2017
 
-@author: anonymous
 """
 
 # COLORS
@@ -26,16 +24,18 @@ TILESIZE = 32
 GRIDWIDTH = WIDTH // TILESIZE
 GRIDHEIGHT = HEIGHT // TILESIZE
 
+# HUD SETTINGS
+HUD_DIGITS = ['hud_0.png', 'hud_1.png', 'hud_2.png', 'hud_3.png', 'hud_4.png', 
+              'hud_5.png', 'hud_6.png', 'hud_7.png', 'hud_8.png', 'hud_9.png']
+HUD_X = 'hud_x.png'
+HUD_IMAGES = {'hud_coin_gold': 'hud_coins.png'}
+
 # PLAYER SETTINGS
 PLAYER_SPEED = 5
 PLAYER_ACC = 0.7
 PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.76
 PLAYER_IMG = 'player.png' 
-
-# MOB SETTINGS
-MOB_IMG = 'zoimbie1_hold.png'
-MOB_SPEED = 150
 
 # LAYERS
 WALL_LAYER = 1
@@ -45,8 +45,7 @@ EFFECTS_LAYER = 4
 ITEMS_LAYER = 1
 
 # ITEMS
-ITEM_IMAGES = {'health': 'health_pack.png',
-               'coin_gold': 'coinGold.png'}
+ITEM_IMAGES = {'coin_gold': 'coinGold.png'}
 BOB_RANGE = 15
 BOB_SPEED = 0.38
 

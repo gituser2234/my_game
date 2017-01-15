@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Jan 14 21:58:44 2017
 
-@author: anonymous
 """
 
 import pygame

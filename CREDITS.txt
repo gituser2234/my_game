@@ -1,1 +1,6 @@
-Character: Buch, http://blog-buch.rhcloud.com
+#CODE
+Basic Framework: Chris Bradfield, http://kidscancode.org/
+#GRAPHICS
+Character: CC0: Buch, http://blog-buch.rhcloud.com
+Map Tiles: CC-BY 3.0: Hyptosis and Zabin from OGA, http://opengameart.org/users/hyptosis, http://opengameart.org/users/zabin
+HUD: CC0: Kenney Vleugels, www.kenney.nl

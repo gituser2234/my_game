@@ -42,6 +42,17 @@ class Game:
         for item in sett.ITEM_IMAGES:
             self.item_images[item] = pygame.image.load(path.join(self.img_folder, sett.ITEM_IMAGES[item])).convert_alpha()
             self.item_images[item] = pygame.transform.scale(self.item_images[item], (sett.TILESIZE * 3 // 4, sett.TILESIZE * 3 // 4))
+            
+        # Load HUD
+        self.hud_x = pygame.image.load(path.join(self.img_folder, sett.HUD_X)).convert_alpha()
+        
+        self.hud_digits = []
+        for digit in sett.HUD_DIGITS:
+            self.hud_digits.append(pygame.image.load(path.join(self.img_folder, digit)).convert_alpha())
+            
+        self.hud_images = {}
+        for image in sett.HUD_IMAGES:
+            self.hud_images[image] = pygame.image.load(path.join(self.img_folder, sett.HUD_IMAGES[image])).convert_alpha()
         
         # Prepare map data
         self.map_data = []
@@ -61,6 +72,7 @@ class Game:
         self.walls = pygame.sprite.Group()
         self.mobs = pygame.sprite.Group()
         self.items = pygame.sprite.Group()
+        self.points = 0
        
         # Placing objects from map
         for tile_object in self.map.tmxdata.objects:
@@ -82,7 +94,7 @@ class Game:
         
     def new(self):
         # Debug mode
-        self.draw_debug = True
+        self.draw_debug = False
         if self.draw_debug:
             self.font = pygame.font.SysFont('Calibri', 35, True, False)
         
@@ -106,6 +118,7 @@ class Game:
         hits = pygame.sprite.spritecollide(self.player, self.items, False)
         for hit in hits:
             if hit.item_type == 'coin_gold':
+                self.points += 1
                 hit.kill()
                 
         # Player hits finish
@@ -114,12 +127,18 @@ class Game:
             chosen_map = 'map2.tmx'
             self.load_map(chosen_map)
             
-        
-    def draw_grid(self):
-        for x in range(0, sett.WIDTH, sett.TILESIZE):
-            pygame.draw.line(self.screen, sett.LIGHTGREY, (x, 0), (x, sett.HEIGHT))
-        for y in range(0, sett.HEIGHT, sett.TILESIZE):
-            pygame.draw.line(self.screen, sett.LIGHTGREY, (0, y), (sett.WIDTH, y))
+    
+    def draw_hud(self):
+        # DRAMATIC CODE, NEEDS TO BE IMPROVED
+        image_rect = self.hud_digits[self.points].get_rect()
+        image_rect.centery = 25
+        self.screen.blit(self.hud_digits[self.points], [10, image_rect.y])
+        image_rect = self.hud_x.get_rect()
+        image_rect.centery = 25
+        self.screen.blit(self.hud_x, [40, image_rect.y])
+        #image_rect = self.hud_images['hud_coin_gold'].get_rect()
+        #y_offset = image_rect.height
+        self.screen.blit(self.hud_images['hud_coin_gold'], [70, 10])
     
     def draw(self):
         # Display FPS
@@ -127,9 +146,7 @@ class Game:
         
         # Draw things
         self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
-        
-        #self.screen.fill(sett.BGCOLOR)
-        #self.draw_grid()
+    
         
         # Draw every sprite
         for sprite in self.all_sprites:
@@ -137,6 +154,9 @@ class Game:
             # camera topleft (which is shifted by player's position)
             # So the line blits sprite.image in shifted rectangle
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+        
+        self.draw_hud()
             
         if self.draw_debug:
             text = self.font.render("vel="+str(self.player.vel), True, sett.BLACK)
