@@ -31,7 +31,7 @@ PLAYER_SPEED = 300
 PLAYER_ACC = 0.7
 PLAYER_FRICTION = -0.12
 PLAYER_GRAV = 0.76
-PLAYER_IMG = 'manBlue_gun.png' 
+PLAYER_IMG = 'player.png' 
 
 # MOB SETTINGS
 MOB_IMG = 'zoimbie1_hold.png'
@@ -45,6 +45,7 @@ EFFECTS_LAYER = 4
 ITEMS_LAYER = 1
 
 # ITEMS
-ITEM_IMAGES = {'health': 'health_pack.png'}
+ITEM_IMAGES = {'health': 'health_pack.png',
+               'coin_gold': 'coinGold.png'}
 BOB_RANGE = 15
 BOB_SPEED = 0.38

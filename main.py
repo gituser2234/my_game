@@ -48,6 +48,7 @@ class Game:
         self.item_images = {}
         for item in sett.ITEM_IMAGES:
             self.item_images[item] = pygame.image.load(path.join(img_folder, sett.ITEM_IMAGES[item])).convert_alpha()
+            self.item_images[item] = pygame.transform.scale(self.item_images[item], (sett.TILESIZE, sett.TILESIZE))
             
     def new(self):
         # Initialize all variables and do all the setup for a new game
@@ -66,7 +67,7 @@ class Game:
                 Mob(self, obj_center.x, obj_center.y)
             elif tile_object.name == 'wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            elif tile_object.name in ['health']:
+            elif tile_object.name in ['coin_gold']:
                 Item(self, obj_center, tile_object.name)
         
         self.camera = Camera(self.map.width, self.map.height)
